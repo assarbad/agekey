@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Compiler Value="C:\lazarus\fpc\2.2.4\bin\x86_64-win64\fpc.exe" Date="995782444"/>
+  <Params Value="-Rintel -MObjFPC -Scgi -CX -Os3 -Xs -XX -WG -vewnhi -FiC:\agekey\source\exe\ -FuC:\agekey\source\exe\ -Fu. -FEC:\agekey\source\exe\ -oAgeKey.exe AgeKey.dpr"/>
+</CONFIG>
