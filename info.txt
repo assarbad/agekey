@@ -1,0 +1,20 @@
+
+to build the program file and the keyboard hook library
+i used Delphi 5.01 with modified system units (VCL code
+stripped) and then i shrinked the program with UPX 1.02 
+(the library is integrated as resource in the exe file)
+
+to unpack the program file execute: "upx -d AgeKey.exe"
+
+be noticed: this program is only a simple demonstration
+how to write a global keyboard hook with the ability to
+hide/modify keyboard messages
+however it's a fully functional program for private use
+only
+ 
+
+21 Nov 2000, nico
+
+
+Gruesse gehen an Assarbad (bekannt als GoP)
+"not yet implemented" Du weisst :)
