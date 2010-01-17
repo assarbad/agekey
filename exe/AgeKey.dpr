@@ -477,14 +477,14 @@ begin
     CheckDlgButton(Dlg, IDC_CHECKCTRL, BST_CHECKED);
 end;
 
-function OnMenu(Dlg: HWND; Item: Word): BOOL;
+function OnMenu(Dlg: HWND; Item: Word): LRESULT;
 begin
-  Result := True;
+  Result := LRESULT(True);
   case Item of
     IDM_MENUINFO:
       ShowInfo(Dlg);
     IDM_MENUPRO1..IDM_MENUPRO6:
-      Result := LoadCheats(Dlg, Item);
+      Result := LRESULT(LoadCheats(Dlg, Item));
     IDM_TRAYREST:
       begin
         Shell_NotifyIconA(NIM_DELETE, @TrayIconData);
@@ -496,7 +496,7 @@ begin
         EndDialog(Dlg, 0);
       end;
   else
-    Result := False;
+    Result := LRESULT(False);
   end;
 end;
 
@@ -656,9 +656,9 @@ begin
   end;
 end;
 
-function OnButton(Dlg: HWND; Button: Word): BOOL;
+function OnButton(Dlg: HWND; Button: Word): LRESULT;
 begin
-  Result := True;
+  Result := LRESULT(True);
   case Button of
     IDC_KINSTALL:
       InstallHook(Dlg);
@@ -669,7 +669,7 @@ begin
     IDC_SAVEFILE:
       SaveToFile(Dlg);
   else
-    Result := False;
+    Result := LRESULT(False);
   end;
 end;
 
@@ -744,9 +744,9 @@ begin
     Shell_NotifyIconA(NIM_DELETE, @TrayIconData);
 end;
 
-function OnCommand(Dlg: HWND; WParam: WPARAM; LParam: LPARAM): BOOL;
+function OnCommand(Dlg: HWND; WParam: WPARAM; LParam: LPARAM): LRESULT;
 begin
-  Result := False;
+  Result := LRESULT(False);
   if LParam = 0 then
     Result := OnMenu(Dlg, LoWord(WParam))
   else if HiWord(WParam) = BN_CLICKED then
@@ -800,27 +800,27 @@ end;
 
 {------------------------------------------------------------------------------}
 
-function DlgProc(Dlg: HWND; Msg: UINT; WParam: WPARAM; LParam: LPARAM): BOOL;
+function DlgProc(Dlg: HWND; Msg: UINT; WParam: WPARAM; LParam: LPARAM): LRESULT;
   stdcall;
 begin
-  Result := True;
+  Result := LRESULT(TRUE);
   case Msg of
     WM_INITDIALOG:
       OnInit(Dlg);
     WM_CTLCOLORMSGBOX..WM_CTLCOLORSTATIC:
-      Result := BOOL(OnColor(Dlg, Msg, WParam));
+      Result := LRESULT(OnColor(Dlg, Msg, WParam));
     WM_CLOSE:
       OnClose(Dlg);
     WM_DESTROY:
       OnDestroy(Dlg);
     WM_SIZE:
-      Result := OnSize(Dlg, WParam, LParam);
+      Result := LRESULT(OnSize(Dlg, WParam, LParam));
     WM_COMMAND:
-      Result := OnCommand(Dlg, WParam, LParam);
+      Result := LRESULT(OnCommand(Dlg, WParam, LParam));
     WM_SHELLNOTIFY:
-      Result := OnShellNotify(Dlg, WParam, LParam);
+      Result := LRESULT(OnShellNotify(Dlg, WParam, LParam));
   else
-    Result := OnDefault(Dlg, Msg, WParam, LParam);
+    Result := LRESULT(OnDefault(Dlg, Msg, WParam, LParam));
   end;
 end;
 
@@ -832,11 +832,11 @@ var
 begin
   AgeKeyOneInstMsg := RegisterWindowMessage(AgeKeyOneInst);
   Mutex := CreateMutex(nil, False, AgeKeyOneInst);
-  if GetLastError <> ERROR_ALREADY_EXISTS then
+  if GetLastError() <> ERROR_ALREADY_EXISTS then
   begin
-    if InitHookDll then
+    if InitHookDll() then
     begin
-      DialogBox(HInstance, PChar(IDD_MAINFORM), 0, @DlgProc);
+      DialogBoxA(HInstance, PChar(IDD_MAINFORM), 0, @DlgProc);
       FreeLibrary(AgeKeyDllInst);
       DeleteFile(AgeKeyDll);
     end;

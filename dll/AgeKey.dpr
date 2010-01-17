@@ -153,10 +153,10 @@ end;
 {$ENDIF}
 
 exports
-  KeyboardHookInstall index 1 name 'Install',
-  KeyboardHookRelease index 2 name 'Release',
-  KeyboardHookGetData index 3 name 'GetData',
-  KeyboardHookSetData index 4 name 'SetData';
+  KeyboardHookInstall name 'Install',
+  KeyboardHookRelease name 'Release',
+  KeyboardHookGetData name 'GetData',
+  KeyboardHookSetData name 'SetData';
 
 {$IFDEF FPC}
 begin
