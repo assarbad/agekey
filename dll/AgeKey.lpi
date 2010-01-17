@@ -31,7 +31,7 @@
       <Unit0>
         <Filename Value="AgeKey.dpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="19" Y="12"/>
+        <CursorPos X="27" Y="12"/>
         <TopLine Value="1"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="20"/>
@@ -167,7 +167,21 @@
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)\"/>
     </SearchPaths>
+    <Parsing>
+      <Style Value="1"/>
+    </Parsing>
+    <CodeGeneration>
+      <SmartLinkUnit Value="True"/>
+      <SmallerCode Value="True"/>
+      <Optimizations>
+        <OptimizationLevel Value="3"/>
+      </Optimizations>
+    </CodeGeneration>
     <Linking>
+      <Debugging>
+        <StripSymbols Value="True"/>
+      </Debugging>
+      <LinkSmart Value="True"/>
       <Options>
         <ExecutableType Value="Library"/>
       </Options>

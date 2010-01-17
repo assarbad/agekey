@@ -1,1 +1,1 @@
-\.(exe|bak|dll|o)$
+\.(exe|bak|dll|o|ico|manifest)$
