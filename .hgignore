@@ -1,1 +1,1 @@
-\.(exe|bak|dll|o|ico|manifest|dsk|dof|~dpr|res)$
+\.(exe|bak|dll|o|ico|manifest|dsk|dof|~dpr|~dsk|obj|res)$
