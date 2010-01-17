@@ -21,7 +21,7 @@ const
 
   IDI_MAINICON = 1;
   IDD_MAINFORM = 101;
-  IDM_MAINMENU = 102;
+  //IDM_MAINMENU = 102;
 
   IDM_MENUINFO = 201;
   IDM_MENUPRO1 = 202;
@@ -39,6 +39,8 @@ const
   IDC_CHECKCTRL = 401;
 
   IDC_CHECKF01 = 512;  { VK_F1 + 400 }
+  IDC_CHECKF12 = 523;
+(*
   IDC_CHECKF02 = 513;
   IDC_CHECKF03 = 514;
   IDC_CHECKF04 = 515;
@@ -49,7 +51,7 @@ const
   IDC_CHECKF09 = 520;
   IDC_CHECKF10 = 521;
   IDC_CHECKF11 = 522;
-  IDC_CHECKF12 = 523;
+*)
 
   IDC_EDITF01 = 612;  { VK_F1 + 500 }
   IDC_EDITF02 = 613;
@@ -126,7 +128,7 @@ var
 {------------------------------------------------------------------------------}
 
 type
-  PKeyboardHookData = ^TKeyboardHookData;
+  //PKeyboardHookData = ^TKeyboardHookData;
   TKeyboardHookData = packed record
     Code: Integer;
     WParam: WPARAM;
@@ -506,17 +508,17 @@ const
   AgeKeyFileSignature = $4B656741;
 
 type
-  PAgeKeyFileHeader = ^TAgeKeyFileHeader;
+  //PAgeKeyFileHeader = ^TAgeKeyFileHeader;
   TAgeKeyFileHeader = packed record
     Signatur: DWORD;
     CtrlOn: Boolean;
   end;
-  PAgeKeyFileEntry = ^TAgeKeyFileEntry;
+  //PAgeKeyFileEntry = ^TAgeKeyFileEntry;
   TAgeKeyFileEntry = packed record
     Checked: Boolean;
     Text: array [0..MAX_TEXT] of Char;
   end;
-  PAgeKeyFile = ^TAgeKeyFile;
+  //PAgeKeyFile = ^TAgeKeyFile;
   TAgeKeyFile = packed record
     Header: TAgeKeyFileHeader;
     Entrys: array [IDC_CHECKF01..IDC_CHECKF12] of TAgeKeyFileEntry;
