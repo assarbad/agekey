@@ -116,8 +116,8 @@ begin
         DisableThreadLibraryCalls(HInstance);
         KeyboardHookSend := RegisterWindowMessage(UniqueName);
         KeyboardHookAddr := @KeyboardHookProc;
-        KeyboardHookMapp := CreateFileMapping($FFFFFFFF, nil, PAGE_READWRITE, 0,
-          SizeOf(TKeyboardHookData), UniqueName);
+        KeyboardHookMapp := CreateFileMapping(INVALID_HANDLE_VALUE, nil,
+          PAGE_READWRITE, 0, SizeOf(TKeyboardHookData), UniqueName);
         if KeyboardHookMapp <> 0 then
         begin
           KeyboardHookData := MapViewOfFile(KeyboardHookMapp, FILE_MAP_ALL_ACCESS,

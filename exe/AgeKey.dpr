@@ -256,6 +256,31 @@ begin
     MessageBox(Dlg, 'Not activated!', AppTitle, MB_ICONINFORMATION);
 end;
 
+function SetClipboardText(Dlg: HWND; Text: PChar): BOOL;
+var
+  hmem: HGLOBAL;
+  clipstr: PChar;
+begin
+  Result := False;
+  if OpenClipboard(Dlg) then
+  try
+    EmptyClipboard();
+    hmem := GlobalAlloc(GMEM_MOVEABLE, lstrlen(Text) + sizeof(Char));
+    if hmem <> 0 then
+    begin
+      clipstr := PChar(GlobalLock(hmem));
+      if Assigned(clipstr) then
+      begin
+        lstrcpy(clipstr, Text);
+        GlobalUnlock(hmem);
+        Result := (hmem = SetClipboardData(CF_TEXT, hmem));
+      end;
+    end;
+  finally
+    CloseClipboard();
+  end;
+end;
+
 procedure KeybMsgHandler(Dlg: HWND);
 var
   Data: TKeyboardHookData;
@@ -307,11 +332,22 @@ begin
                   end
                   else
                   begin
+                    // Edit field not found (holds for
                     if (lstrcmpi(Name, 'EDIT') <> 0) and
                       (Data.LParam and $40000000 = 0) then
                     begin
+                      SetClipboardText(Dlg, Text);
                       if Evnt then
                         keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0);
+                      // Invoke the chat dialog
+                      keybd_event(VK_RETURN, 0, 0, 0);
+                      keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);
+                      // Paste what's in the clipboard ;)
+                      keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
+                      keybd_event(Ord('V'), MapVirtualKey(Ord('V'), 0), 0, 0);
+                      keybd_event(Ord('V'), MapVirtualKey(Ord('V'), 0), KEYEVENTF_KEYUP, 0);
+                      keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
+                      // Dismiss it by "pressing" enter
                       keybd_event(VK_RETURN, 0, 0, 0);
                       keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);
                       if Evnt then
@@ -860,7 +896,7 @@ begin
   begin
     if InitHookDll() then
     begin
-      DialogBoxA(HInstance, PChar(IDD_MAINFORM), 0, @DlgProc);
+      DialogBox(HInstance, PChar(IDD_MAINFORM), 0, @DlgProc);
       FreeLibrary(AgeKeyDllInst);
       DeleteFile(AgeKeyDll);
     end;
