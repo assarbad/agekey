@@ -12,6 +12,8 @@
 #define IDM_MENUPRO4 205
 #define IDM_MENUPRO5 206
 #define IDM_MENUPRO6 207
+#define IDM_MENUPRO7 208
+#define IDM_MENUPRO8 209
 
 #define IDC_KINSTALL 301
 #define IDC_KRELEASE 302
@@ -52,12 +54,14 @@ IDM_MAINMENU MENU
 BEGIN
   POPUP " C&heats "
   BEGIN
+    MENUITEM "Age of Mythology", IDM_MENUPRO7
+    MENUITEM "Age of Mythology: The Titans", IDM_MENUPRO8
+    MENUITEM "Age of Empires II: The Age of Kings", IDM_MENUPRO5
+    MENUITEM "Age of Empires II: The Conquerors", IDM_MENUPRO6
+    MENUITEM "Age of Empires: The Rise of Rome (1)", IDM_MENUPRO3
+    MENUITEM "Age of Empires: The Rise of Rome (2)", IDM_MENUPRO4
     MENUITEM "Age of Empires (1)", IDM_MENUPRO1
     MENUITEM "Age of Empires (2)", IDM_MENUPRO2
-    MENUITEM "The Raise of Rome (1)", IDM_MENUPRO3
-    MENUITEM "The Raise of Rome (2)", IDM_MENUPRO4
-    MENUITEM "The Age of Kings", IDM_MENUPRO5
-    MENUITEM "The Conquerors", IDM_MENUPRO6
   END
   MENUITEM " &Info... ", IDM_MENUINFO
 END

@@ -30,6 +30,8 @@ const
   IDM_MENUPRO4 = 205;
   IDM_MENUPRO5 = 206;
   IDM_MENUPRO6 = 207;
+  IDM_MENUPRO7 = 208;
+  IDM_MENUPRO8 = 209;
 
   IDC_KINSTALL = 301;
   IDC_KRELEASE = 302;
@@ -40,18 +42,16 @@ const
 
   IDC_CHECKF01 = 512;  { VK_F1 + 400 }
   IDC_CHECKF12 = 523;
-(*
-  IDC_CHECKF02 = 513;
-  IDC_CHECKF03 = 514;
-  IDC_CHECKF04 = 515;
-  IDC_CHECKF05 = 516;
-  IDC_CHECKF06 = 517;
-  IDC_CHECKF07 = 518;
-  IDC_CHECKF08 = 519;
-  IDC_CHECKF09 = 520;
-  IDC_CHECKF10 = 521;
-  IDC_CHECKF11 = 522;
-*)
+  //IDC_CHECKF02 = 513;
+  //IDC_CHECKF03 = 514;
+  //IDC_CHECKF04 = 515;
+  //IDC_CHECKF05 = 516;
+  //IDC_CHECKF06 = 517;
+  //IDC_CHECKF07 = 518;
+  //IDC_CHECKF08 = 519;
+  //IDC_CHECKF09 = 520;
+  //IDC_CHECKF10 = 521;
+  //IDC_CHECKF11 = 522;
 
   IDC_EDITF01 = 612;  { VK_F1 + 500 }
   IDC_EDITF02 = 613;
@@ -348,7 +348,8 @@ begin
                   'sending an [Enter]Text[Enter] to the'#13#10 +
                   'active program ;)'#13#10#13#10 +
                   'In fact it''s a simple keyboard hook.'#13#10 +
-                  'written by nico with Delphi 5'#13#10;
+                  'written by nico with Delphi 5'#13#10#13#10 +
+                  '... and updated by olli with Delphi 7'#13#10;
   Msg.lpszCaption := AppTitle;
   Msg.dwStyle := MB_USERICON;
   Msg.lpszIcon := PChar(IDI_MAINICON);
@@ -434,9 +435,25 @@ begin
   SetText(Dlg, IDC_EDITF12, 'i r winner');
 end;
 
-function LoadCheats(Dlg: HWND; Item: Word): BOOL;
+procedure LoadAgeMythStandard(Dlg: HWND);
 begin
-  Result := True;
+  SetText(Dlg, IDC_EDITF01, 'ISIS HEAR MY PLEA');
+  SetText(Dlg, IDC_EDITF02, 'JUNK FOOD NIGHT');
+  SetText(Dlg, IDC_EDITF03, 'TROJAN HORSE FOR SALE');
+  SetText(Dlg, IDC_EDITF04, 'ATM OF EREBUS');
+  SetText(Dlg, IDC_EDITF05, 'MOUNT OLYMPUS');
+  SetText(Dlg, IDC_EDITF06, 'LAY OF THE LAND');
+  SetText(Dlg, IDC_EDITF07, 'PANDORAS BOX');
+  SetText(Dlg, IDC_EDITF08, 'DIVINE INTERVENTION');
+  SetText(Dlg, IDC_EDITF09, 'L33T SUPA H4X0R');
+  SetText(Dlg, IDC_EDITF10, 'BAWK BAWK BOOM');
+  SetText(Dlg, IDC_EDITF11, 'O CANADA');
+  SetText(Dlg, IDC_EDITF12, 'FEAR THE FORAGE');
+end;
+
+function LoadCheats(Dlg: HWND; Item: Word): LRESULT;
+begin
+  Result := LRESULT(True);
   case Item of
     IDM_MENUPRO1:
       begin
@@ -472,10 +489,15 @@ begin
         LoadAge2Standard(Dlg);
         SetText(Dlg, IDC_EDITF11, 'furious the monkey boy');
       end;
+    IDM_MENUPRO8,
+    IDM_MENUPRO7:
+      begin
+        LoadAgeMythStandard(Dlg);
+      end;
   else
-    Result := False;
+    Result := LRESULT(False);
   end;
-  if Result then
+  if Result <> 0 then
     CheckDlgButton(Dlg, IDC_CHECKCTRL, BST_CHECKED);
 end;
 
@@ -485,8 +507,8 @@ begin
   case Item of
     IDM_MENUINFO:
       ShowInfo(Dlg);
-    IDM_MENUPRO1..IDM_MENUPRO6:
-      Result := LRESULT(LoadCheats(Dlg, Item));
+    IDM_MENUPRO1..IDM_MENUPRO8:
+      Result := LoadCheats(Dlg, Item);
     IDM_TRAYREST:
       begin
         Shell_NotifyIconA(NIM_DELETE, @TrayIconData);
