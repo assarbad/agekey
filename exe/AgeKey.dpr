@@ -109,7 +109,12 @@ const
 var
   TrayIconData: TNotifyIconData = (
     cbSize: SizeOf(TNotifyIconData);
-    Wnd: 0;
+{$IFDEF FPC}
+    hWnd:
+{$ELSE}
+    Wnd:
+{$ENDIF}
+            0;
     uID: IDI_MAINTRAY;
     uFlags: NIF_ICON or NIF_MESSAGE or NIF_TIP;
     uCallbackMessage: WM_SHELLNOTIFY;
@@ -140,14 +145,10 @@ const
   KeybSetDataName = 'SetData';
 
 type
-  TFNKeyboardHookInstall = function: UINT;
-    stdcall;
-  TFNKeyboardHookRelease = function: BOOL;
-    stdcall;
-  TFNKeyboardHookGetData = function(var Data: TKeyboardHookData): BOOL;
-    stdcall;
-  TFNKeyboardHookSetData = function(const Data: TKeyboardHookData): BOOL;
-    stdcall;
+  TFNKeyboardHookInstall = function: UINT; stdcall;
+  TFNKeyboardHookRelease = function: BOOL; stdcall;
+  TFNKeyboardHookGetData = function(var Data: TKeyboardHookData): BOOL; stdcall;
+  TFNKeyboardHookSetData = function(const Data: TKeyboardHookData): BOOL; stdcall;
 
 var
   KeyboardHookInstall: TFNKeyboardHookInstall = nil;
@@ -190,14 +191,10 @@ begin
               AgeKeyDllInst := LoadLibrary(AgeKeyDll);
               if AgeKeyDllInst <> 0 then
               begin
-                KeyboardHookInstall := GetProcAddress(AgeKeyDllInst,
-                  KeybInstallName);
-                KeyboardHookRelease := GetProcAddress(AgeKeyDllInst,
-                  KeybReleaseName);
-                KeyboardHookGetData := GetProcAddress(AgeKeyDllInst,
-                  KeybGetDataName);
-                KeyboardHookSetData := GetProcAddress(AgeKeyDllInst,
-                  KeybSetDataName);
+                KeyboardHookInstall := TFNKeyboardHookInstall(GetProcAddress(AgeKeyDllInst, KeybInstallName));
+                KeyboardHookRelease := TFNKeyboardHookRelease(GetProcAddress(AgeKeyDllInst, KeybReleaseName));
+                KeyboardHookGetData := TFNKeyboardHookGetData(GetProcAddress(AgeKeyDllInst, KeybGetDataName));
+                KeyboardHookSetData := TFNKeyboardHookSetData(GetProcAddress(AgeKeyDllInst, KeybSetDataName));
                 Result := Assigned(KeyboardHookInstall) and
                   Assigned(KeyboardHookRelease) and
                   Assigned(KeyboardHookGetData) and
@@ -227,7 +224,7 @@ procedure InstallHook(Dlg: HWND);
 begin
   if KeyboardHookSend = 0 then
   begin
-    KeyboardHookSend := KeyboardHookInstall;
+    KeyboardHookSend := KeyboardHookInstall();
     if KeyboardHookSend <> 0 then
     begin
       EnableWindow(GetDlgItem(Dlg, IDC_KINSTALL), False);
@@ -244,7 +241,7 @@ procedure ReleaseHook(Dlg: HWND);
 begin
   if KeyboardHookSend <> 0 then
   begin
-    if KeyboardHookRelease then
+    if KeyboardHookRelease() then
     begin
       KeyboardHookSend := 0;
       EnableWindow(GetDlgItem(Dlg, IDC_KINSTALL), True);
@@ -490,12 +487,12 @@ begin
       Result := LoadCheats(Dlg, Item);
     IDM_TRAYREST:
       begin
-        Shell_NotifyIcon(NIM_DELETE, @TrayIconData);
+        Shell_NotifyIconA(NIM_DELETE, @TrayIconData);
         ShowWindow(Dlg, SW_RESTORE);
       end;
     IDM_TRAYEXIT:
       begin
-        Shell_NotifyIcon(NIM_DELETE, @TrayIconData);
+        Shell_NotifyIconA(NIM_DELETE, @TrayIconData);
         EndDialog(Dlg, 0);
       end;
   else
@@ -551,7 +548,11 @@ begin
   Ofn.nMaxFile := MAX_PATH;
   Ofn.Flags := OFN_HIDEREADONLY or OFN_PATHMUSTEXIST or OFN_FILEMUSTEXIST or
     OFN_EXPLORER or OFN_ENABLESIZING;
+{$IFDEF FPC}
+  if GetOpenFileName(@Ofn) then
+{$ELSE}
   if GetOpenFileName(Ofn) then
+{$ENDIF}
   begin
     LoadFile := CreateFile(Ofn.lpstrFile, GENERIC_READ, FILE_SHARE_READ or
        FILE_SHARE_WRITE, nil, OPEN_EXISTING, FILE_ATTRIBUTE_ARCHIVE, 0);
@@ -613,7 +614,11 @@ begin
   Ofn.Flags := OFN_OVERWRITEPROMPT or OFN_HIDEREADONLY or OFN_PATHMUSTEXIST or
     OFN_NOREADONLYRETURN or OFN_EXPLORER or OFN_ENABLESIZING;
   Ofn.lpstrDefExt := OfnDefExt;
+{$IFDEF FPC}
+  if GetSaveFileName(@Ofn) then
+{$ELSE}
   if GetSaveFileName(Ofn) then
+{$ENDIF}
   begin
     SaveFile := CreateFile(Ofn.lpstrFile, GENERIC_WRITE, FILE_SHARE_READ, nil,
       CREATE_ALWAYS, FILE_ATTRIBUTE_ARCHIVE, 0);
@@ -725,13 +730,18 @@ begin
   Result := True;
   if WParam = SIZE_MINIMIZED then
   begin
-    TrayIconData.Wnd := Dlg;
+{$IFDEF FPC}
+    TrayIconData.hWnd
+{$ELSE}
+    TrayIconData.Wnd
+{$ENDIF}
+                             := Dlg;
     ShowWindow(Dlg, SW_HIDE);
-    Shell_NotifyIcon(NIM_ADD, @TrayIconData);
+    Shell_NotifyIconA(NIM_ADD, @TrayIconData);
     Result := True;
   end
   else
-    Shell_NotifyIcon(NIM_DELETE, @TrayIconData);
+    Shell_NotifyIconA(NIM_DELETE, @TrayIconData);
 end;
 
 function OnCommand(Dlg: HWND; WParam: WPARAM; LParam: LPARAM): BOOL;
