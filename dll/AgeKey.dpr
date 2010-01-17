@@ -3,10 +3,12 @@ library AgeKey;
 uses
   Windows;
 
-{$E dll}
+{$IFNDEF FPC}
+ {$E dll}
+{$ENDIF}
 
 const
-  UniqueName = 'KeyboardHook_AgeKey_MsgHelper';
+  UniqueName = 'KeyboardHook_AgeKey_{AA35E2A5-7B53-4de6-A5D0-AAC166208C6D}';
   KeyboardHookWait = True;
   KeyboardHookTime = 500;
 
@@ -81,10 +83,10 @@ begin
   CallNext := True;
   if Code = HC_ACTION then
   begin
-    KeyboardHookData.Code := Integer(BOOL(GetKeyState(VK_CONTROL) and $8000 <> 0));
-    KeyboardHookData.WParam := WParam;
-    KeyboardHookData.LParam := LParam;
-    KeyboardHookData.Tag := 0;
+    KeyboardHookData^.Code := Integer(BOOL(GetKeyState(VK_CONTROL) and $8000 <> 0));
+    KeyboardHookData^.WParam := WParam;
+    KeyboardHookData^.LParam := LParam;
+    KeyboardHookData^.Tag := 0;
     if FlushViewOfFile(KeyboardHookData, SizeOf(TKeyboardHookData)) then
     begin
       SendMessage(HWND_BROADCAST, KeyboardHookSend, 0, 0);
@@ -95,8 +97,8 @@ begin
           TimeNow := GetTickCount;
           if TimeNow < TimeRun then
             TimeRun := TimeNow;
-        until (KeyboardHookData.Tag <> 0) or (TimeNow - TimeRun > KeyboardHookTime);
-        CallNext := KeyboardHookData.Tag >= 0;
+        until (KeyboardHookData^.Tag <> 0) or (TimeNow - TimeRun > KeyboardHookTime);
+        CallNext := KeyboardHookData^.Tag >= 0;
       end;
     end;
   end;
@@ -137,14 +139,34 @@ begin
   end;
 end;
 
+{$IFDEF FPC}
+function DLLEntryPoint(dllparam: longint): longbool;
+begin
+  DllEntry(dllparam);
+  result := true;
+end;
+
+procedure DLLExitPoint(dllparam : longint);
+begin
+  DllEntry(DLL_PROCESS_DETACH);
+end;
+{$ENDIF}
+
 exports
   KeyboardHookInstall index 1 name 'Install',
   KeyboardHookRelease index 2 name 'Release',
   KeyboardHookGetData index 3 name 'GetData',
   KeyboardHookSetData index 4 name 'SetData';
 
+{$IFDEF FPC}
+begin
+     Dll_Process_Attach_Hook := @DLLEntryPoint;
+     DLLEntryPoint(DLL_PROCESS_ATTACH);
+     Dll_Process_Detach_Hook := @DLLExitPoint;
+{$ELSE}
 begin
   DllProc := @DLLEntry;
   DllEntry(DLL_PROCESS_ATTACH);
+{$ENDIF}
 end.
 
