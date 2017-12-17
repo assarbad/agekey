@@ -487,6 +487,22 @@ begin
   SetText(Dlg, IDC_EDITF12, 'FEAR THE FORAGE');
 end;
 
+procedure LoadAgeMythTitans(Dlg: HWND);
+begin
+  SetText(Dlg, IDC_EDITF01, 'ATLANTIS REBORN');
+  SetText(Dlg, IDC_EDITF02, 'JUNK FOOD NIGHT');
+  SetText(Dlg, IDC_EDITF03, 'TROJAN HORSE FOR SALE');
+  SetText(Dlg, IDC_EDITF04, 'ATM OF EREBUS');
+  SetText(Dlg, IDC_EDITF05, 'MOUNT OLYMPUS');
+  SetText(Dlg, IDC_EDITF06, 'LAY OF THE LAND');
+  SetText(Dlg, IDC_EDITF07, 'ZENOS PARADOX');
+  SetText(Dlg, IDC_EDITF08, 'DIVINE INTERVENTION');
+  SetText(Dlg, IDC_EDITF09, 'L33T SUPA H4X0R');
+  SetText(Dlg, IDC_EDITF10, 'BAWK BAWK BOOM');
+  SetText(Dlg, IDC_EDITF11, 'TITANOMACHY');
+  SetText(Dlg, IDC_EDITF12, 'FEAR THE FORAGE');
+end;
+
 function LoadCheats(Dlg: HWND; Item: Word): LRESULT;
 begin
   Result := LRESULT(True);
@@ -525,10 +541,13 @@ begin
         LoadAge2Standard(Dlg);
         SetText(Dlg, IDC_EDITF11, 'furious the monkey boy');
       end;
-    IDM_MENUPRO8,
     IDM_MENUPRO7:
       begin
         LoadAgeMythStandard(Dlg);
+      end;
+    IDM_MENUPRO8:
+      begin
+        LoadAgeMythTitans(Dlg);
       end;
   else
     Result := LRESULT(False);
