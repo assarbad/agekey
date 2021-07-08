@@ -1,1 +1,3 @@
 \.(exe|bak|dll|o|ico|manifest|dsk|dof|~dpr|~dsk|obj|res)$
+syntax: glob
+.git/
