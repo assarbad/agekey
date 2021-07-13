@@ -1,4 +1,3 @@
-===============================
 Age of Empires - Message Helper
 ===============================
 
@@ -38,4 +37,4 @@ section is built with Delphi 7 Pro and code-signed by me (both the embedded DLL
 and the EXE containing it).
 
 .. _Nico Bendlin: http://www.bendlins.de/nico/
-.. _download area: https://bitbucket.org/assarbad/agekey/downloads/
+.. _download area: https://sourceforge.net/projects/agekey/files/
